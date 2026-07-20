@@ -1,4 +1,4 @@
 [build]
 base = "frontend"
-command = "npm install && node_modules/.bin/ng build"
+command = "npm install && chmod +x node_modules/.bin/ng && node_modules/.bin/ng build"
 publish = "dist/budget-butler-frontend/browser"
