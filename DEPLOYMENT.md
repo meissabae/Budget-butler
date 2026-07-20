@@ -63,12 +63,14 @@ You'll plug these into Render in the next step.
 2. **New → Web Service** → connect your `budget-butler` repository.
 3. Configure:
    - **Root Directory:** `backend`
-   - **Runtime:** Java
-   - **Build Command:** `./mvnw clean package -DskipTests` (or `mvn clean package -DskipTests` if no wrapper)
-   - **Start Command:** `java -Xmx400m -jar target/*.jar`
+   - **Language:** **Docker** (Render does NOT run Java natively - only Node.js, Python,
+     Ruby, Go, Rust, and Elixir have native runtimes. Java requires a Dockerfile, which is
+     already included at `backend/Dockerfile`, so Render will build and run it automatically
+     once you pick "Docker" here.)
+   - **Instance Type:** Free
 
-     (`-Xmx400m` caps the JVM's memory at 400MB so it fits inside Render's 512MB free tier -
-     Spring Boot + a full JVM can otherwise use more than that and crash.)
+   You don't need to fill in Build/Start commands - Render reads them from the Dockerfile.
+   The Dockerfile also caps JVM memory (`-Xmx400m`) to fit inside the free tier's 512MB limit.
 
 4. Add these **Environment Variables** (Render's dashboard → Environment tab). Spring Boot
    automatically maps environment variables to properties, so you don't need to edit any code:
