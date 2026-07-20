@@ -2,3 +2,6 @@
 base = "frontend"
 command = "npm install && chmod +x node_modules/.bin/ng && node_modules/.bin/ng build"
 publish = "dist/budget-butler-frontend/browser"
+
+[build.environment]
+NODE_VERSION = "20"
