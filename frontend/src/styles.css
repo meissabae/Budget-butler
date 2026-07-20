@@ -1,0 +1,135 @@
+/* ==========================================================
+   BUDGET BUTLER - GLOBAL DESIGN TOKENS
+   Keep every color and font in one place, so the whole app
+   stays consistent and is easy to re-theme later.
+   ========================================================== */
+:root {
+  --color-ink: #1B1F3B;        /* dark navy - headers, primary text */
+  --color-cream: #FBF9F4;      /* card / page background */
+  --color-yellow: #FFD166;     /* main accent - buttons, highlights */
+  --color-mint: #06D6A0;       /* positive / good news */
+  --color-coral: #EF476F;      /* negative / warning / overspend */
+  --color-muted: #6B7089;      /* secondary text */
+  --color-border: #E7E2D6;
+
+  --font-display: 'Fredoka', sans-serif; /* playful, rounded - used for headings & the "voice" of the butler */
+  --font-body: 'Inter', sans-serif;      /* clean and readable - used for regular text */
+
+  --radius: 16px;
+  --shadow: 0 4px 14px rgba(27, 31, 59, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--color-cream);
+  color: var(--color-ink);
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  margin: 0 0 8px 0;
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+button:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(27, 31, 59, 0.15);
+}
+
+button:not(:disabled):active {
+  transform: translateY(0px) scale(0.98);
+}
+
+input, select {
+  font-family: var(--font-body);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--color-yellow);
+  box-shadow: 0 0 0 3px rgba(255, 209, 102, 0.35);
+}
+
+/* ==========================================================
+   LIFE & MOTION
+   Every .card fades + slides in on entry. Since Angular destroys
+   and recreates components on route change, this replays naturally
+   every time you navigate - no animation library needed for this part.
+   ========================================================== */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+.card, .plan-card, .auth-card {
+  animation: fadeInUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(27, 31, 59, 0.12);
+}
+
+/* Stagger cards down the page so they don't all pop in at once */
+.dashboard > .card:nth-child(1), .dashboard > div:nth-child(1) { animation-delay: 0.02s; }
+.dashboard > .card:nth-child(2), .dashboard > div:nth-child(2) { animation-delay: 0.08s; }
+.dashboard > .card:nth-child(3) { animation-delay: 0.14s; }
+.dashboard > .card:nth-child(4) { animation-delay: 0.20s; }
+.dashboard > .card:nth-child(5) { animation-delay: 0.26s; }
+.dashboard > .card:nth-child(6) { animation-delay: 0.32s; }
+.dashboard > .card:nth-child(7) { animation-delay: 0.38s; }
+.dashboard > .card:nth-child(8) { animation-delay: 0.44s; }
+
+.badge, .timeline-entry, .pace-warning, .insight, .wallet-row {
+  animation: fadeIn 0.3s ease both;
+}
+
+/* Simple loading spinner - use as <div class="spinner"></div> next to loading text */
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-yellow);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.pulse {
+  animation: pulse 1.4s ease-in-out infinite;
+}

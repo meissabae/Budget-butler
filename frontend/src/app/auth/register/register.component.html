@@ -1,0 +1,23 @@
+<div class="auth-wrapper">
+  <form class="auth-card" (ngSubmit)="submit()">
+    <h2>🎩 Create your account</h2>
+    <p class="subtitle">Your future self is going to thank you for this.</p>
+
+    <label>Name</label>
+    <input type="text" [(ngModel)]="name" name="name" required placeholder="Jane Doe">
+
+    <label>Email</label>
+    <input type="email" [(ngModel)]="email" name="email" required placeholder="you@example.com">
+
+    <label>Password</label>
+    <input type="password" [(ngModel)]="password" name="password" required placeholder="At least 6 characters">
+
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+    <button type="submit" class="btn-primary" [disabled]="loading">
+      {{ loading ? 'Creating account...' : 'Create account' }}
+    </button>
+
+    <p class="switch">Already have an account? <a routerLink="/login">Log in</a></p>
+  </form>
+</div>

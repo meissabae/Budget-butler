@@ -1,0 +1,90 @@
+<h2>💳 Subscription</h2>
+<p class="subtitle">Choose the plan that fits how deep you want Budget Butler's personality to go.</p>
+
+<div class="banner success" *ngIf="showSuccessBanner">
+  🎉 Payment successful! Your plan is now active.
+</div>
+<div class="banner canceled" *ngIf="showCanceledBanner">
+  Checkout was canceled - no charge was made. You can try again anytime.
+</div>
+
+<div *ngIf="loading" class="state-message">Loading your plan...</div>
+<div *ngIf="errorMessage" class="state-message error">{{ errorMessage }}</div>
+
+<div *ngIf="status && !loading">
+
+  <div class="trial-banner" *ngIf="status.billingStatus === 'TRIAL'">
+    🎁 You're in your free trial - {{ status.trialDaysRemaining }} day(s) left with full Premium access.
+  </div>
+
+  <!-- Monthly / Annual toggle -->
+  <div class="interval-toggle">
+    <button [class.active]="selectedInterval === 'MONTHLY'" (click)="setInterval('MONTHLY')">Monthly</button>
+    <button [class.active]="selectedInterval === 'ANNUAL'" (click)="setInterval('ANNUAL')">
+      Annual <span class="save-badge">Save 20%</span>
+    </button>
+  </div>
+
+  <div class="plans">
+
+    <!-- FREE -->
+    <div class="plan-card" [class.current]="status.currentTier === 'FREE' && status.billingStatus !== 'TRIAL'">
+      <h3>🆓 Free</h3>
+      <div class="price">$0</div>
+      <p class="plan-desc">Plain expense tracking. No commentary, no insights.</p>
+      <ul>
+        <li>Categories & transactions</li>
+        <li>One dream goal (numbers only)</li>
+        <li>This month vs last month totals</li>
+      </ul>
+      <div class="current-tag" *ngIf="status.currentTier === 'FREE' && status.billingStatus !== 'TRIAL'">Your current plan</div>
+    </div>
+
+    <!-- PLUS -->
+    <div class="plan-card" [class.current]="status.currentTier === 'PLUS' && status.billingStatus === 'ACTIVE'">
+      <h3>⭐ Plus</h3>
+      <div class="price">
+        ${{ selectedInterval === 'MONTHLY' ? prices.plus.monthly : prices.plus.annual }}
+        <span class="period">/ {{ selectedInterval === 'MONTHLY' ? 'month' : 'year' }}</span>
+      </div>
+      <p class="plan-desc">A taste of Budget Butler's personality.</p>
+      <ul>
+        <li>Everything in Free</li>
+        <li>Daily Title & nickname</li>
+        <li>Twin Comparison commentary</li>
+        <li>Pace Analysis warnings</li>
+      </ul>
+      <button class="btn-primary" (click)="subscribe('PLUS')" [disabled]="redirecting"
+              *ngIf="!(status.currentTier === 'PLUS' && status.billingStatus === 'ACTIVE')">
+        {{ redirecting ? 'Redirecting...' : 'Choose Plus' }}
+      </button>
+      <div class="current-tag" *ngIf="status.currentTier === 'PLUS' && status.billingStatus === 'ACTIVE'">Your current plan</div>
+    </div>
+
+    <!-- PREMIUM -->
+    <div class="plan-card featured" [class.current]="status.currentTier === 'PREMIUM' && status.billingStatus === 'ACTIVE'">
+      <div class="featured-badge">Most popular</div>
+      <h3>👑 Premium</h3>
+      <div class="price">
+        ${{ selectedInterval === 'MONTHLY' ? prices.premium.monthly : prices.premium.annual }}
+        <span class="period">/ {{ selectedInterval === 'MONTHLY' ? 'month' : 'year' }}</span>
+      </div>
+      <p class="plan-desc">The full Financial Dream Guardian experience.</p>
+      <ul>
+        <li>Everything in Plus</li>
+        <li>Dream Protector</li>
+        <li>Memory Lane timeline</li>
+        <li>Weekly & monthly Talking Reports</li>
+        <li>Payday Patterns insights</li>
+        <li>Time Cost of Purchases</li>
+        <li>Dream Garden</li>
+      </ul>
+      <button class="btn-primary" (click)="subscribe('PREMIUM')" [disabled]="redirecting"
+              *ngIf="!(status.currentTier === 'PREMIUM' && status.billingStatus === 'ACTIVE')">
+        {{ redirecting ? 'Redirecting...' : 'Choose Premium' }}
+      </button>
+      <div class="current-tag" *ngIf="status.currentTier === 'PREMIUM' && status.billingStatus === 'ACTIVE'">Your current plan</div>
+    </div>
+
+  </div>
+</div>

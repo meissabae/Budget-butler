@@ -1,0 +1,24 @@
+<h2>Your Dreams</h2>
+<p class="subtitle">Set the goals Budget Butler will protect. You can track as many as you like.</p>
+
+<section class="card form-card">
+  <h3>{{ editingId != null ? 'Edit dream' : 'Add a dream' }}</h3>
+  <form (ngSubmit)="submit()" class="form-row">
+    <input type="text" placeholder="Dream name (e.g. MacBook Pro)" [(ngModel)]="form.name" name="name" required>
+    <input type="number" placeholder="Target amount" [(ngModel)]="form.targetAmount" name="targetAmount" min="1" required>
+    <button type="submit" class="btn-primary">{{ editingId != null ? 'Save changes' : 'Add dream' }}</button>
+    <button type="button" class="btn-cancel" *ngIf="editingId != null" (click)="cancelEdit()">Cancel</button>
+  </form>
+</section>
+
+<section class="card" *ngFor="let dream of dreams" [class.editing-row]="dream.id === editingId">
+  <h3>✨ {{ dream.name }}</h3>
+  <p>Target: {{ dream.targetAmount | currency:currency }}</p>
+  <p>Saved so far: {{ dream.savedAmount | currency:currency }}</p>
+  <div class="actions">
+    <button class="btn-edit" (click)="startEdit(dream)">Edit</button>
+    <button class="btn-delete" (click)="removeDream(dream.id)">Remove</button>
+  </div>
+</section>
+
+<p *ngIf="dreams.length === 0" class="empty">No dreams yet. Add your first one above!</p>

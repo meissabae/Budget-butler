@@ -1,0 +1,162 @@
+<div *ngIf="loading" class="state-message">Loading your financial roast... 🔥</div>
+
+<div *ngIf="errorMessage" class="state-message error">{{ errorMessage }}</div>
+
+<div *ngIf="dashboard && !loading" class="dashboard">
+
+  <!-- Email verification reminder -->
+  <div class="verify-banner" *ngIf="!dashboard.emailVerified">
+    📧 Please verify your email address.
+    <button class="resend-btn" (click)="resendVerification()" [disabled]="resendingVerification">
+      {{ resendingVerification ? 'Sending...' : (resendSent ? 'Sent!' : 'Resend email') }}
+    </button>
+  </div>
+
+  <!-- Trial countdown badge - only shown while still on trial -->
+  <div class="trial-badge" *ngIf="dashboard.trialDaysRemaining > 0 && dashboard.trialDaysRemaining <= 20">
+    🎁 {{ dashboard.trialDaysRemaining }} day(s) left in your free trial (full Premium access)
+  </div>
+
+  <!-- WALLETS SUMMARY (always visible, not gated by subscription tier) -->
+  <section class="card" *ngIf="dashboard.wallets && dashboard.wallets.length > 0">
+    <h3>👛 Wallets</h3>
+    <div class="wallet-row" *ngFor="let wallet of dashboard.wallets">
+      <span>{{ wallet.name }}</span>
+      <span class="wallet-balance">{{ wallet.balance | currency:dashboard.currency }}</span>
+    </div>
+  </section>
+  <section class="card" *ngIf="!dashboard.wallets || dashboard.wallets.length === 0">
+    <h3>👛 Wallets</h3>
+    <p>You haven't created a wallet yet. Head to the <a routerLink="/wallets">Wallets</a> tab to add one -
+      your categories and expenses need a wallet to draw from.</p>
+  </section>
+
+  <!-- 2. TWIN COMPARISON (numbers are always free) -->
+  <section class="card">
+    <h3>👯 Twin Comparison</h3>
+    <div class="twin-numbers">
+      <div>
+        <span class="label">Last month</span>
+        <span class="value">{{ dashboard.lastMonthTotal | currency:dashboard.currency }}</span>
+      </div>
+      <div>
+        <span class="label">This month</span>
+        <span class="value">{{ dashboard.thisMonthTotal | currency:dashboard.currency }}</span>
+      </div>
+    </div>
+    <p *ngIf="dashboard.twinComparisonMessage">{{ dashboard.twinComparisonMessage }}</p>
+  </section>
+
+  <!-- PAYWALL 1: shown on the FREE tier instead of every Plus/Premium section -->
+  <section class="card upsell" *ngIf="dashboard.plusLocked">
+    <h3>🔒 Unlock Budget Butler's personality</h3>
+    <p>{{ dashboard.upgradeMessage }}</p>
+    <a routerLink="/billing" class="btn-primary">See plans</a>
+  </section>
+
+  <!-- Plus-tier features -->
+  <ng-container *ngIf="!dashboard.plusLocked">
+
+    <!-- 1. DAILY DYNAMIC TITLE -->
+    <section class="card highlight">
+      <h2>{{ dashboard.nickname }}</h2>
+      <p>{{ dashboard.dailyTitleMessage }}</p>
+    </section>
+
+    <!-- 3. PACE ANALYSIS -->
+    <section class="card" *ngIf="dashboard.paceWarnings.length > 0">
+      <h3>⏱️ Pace Analysis</h3>
+      <div class="pace-warning" *ngFor="let warning of dashboard.paceWarnings">
+        <strong>{{ warning.categoryName }}</strong>
+        <p>{{ warning.message }}</p>
+      </div>
+    </section>
+
+  </ng-container>
+
+  <!-- PAYWALL 2: shown on the PLUS tier instead of the deeper Premium sections -->
+  <section class="card upsell" *ngIf="!dashboard.plusLocked && dashboard.premiumLocked">
+    <h3>👑 Go deeper with Premium</h3>
+    <p>{{ dashboard.premiumUpsellMessage }}</p>
+    <a routerLink="/billing" class="btn-primary">Upgrade to Premium</a>
+  </section>
+
+  <!-- Premium-tier features -->
+  <ng-container *ngIf="!dashboard.premiumLocked">
+
+    <!-- 6. PERIODIC REPORT (only shown on Fridays / last day of month) -->
+    <section class="card report" *ngIf="dashboard.periodicReportMessage">
+      <h3>📣 Special Report</h3>
+      <p>{{ dashboard.periodicReportMessage }}</p>
+    </section>
+
+    <!-- FEATURE 3: DREAM GARDEN -->
+    <section class="card garden" *ngIf="dashboard.gardenStatus as garden">
+      <h3>{{ garden.stageEmoji }} Dream Garden: {{ garden.stageName }}</h3>
+      <div class="progress-bar garden-bar">
+        <div class="progress-fill garden-fill" [style.width.%]="garden.growthPercentage"></div>
+      </div>
+      <p class="progress-label">{{ garden.growthPercentage | number:'1.0-0' }}% grown</p>
+      <p>{{ garden.statusMessage }}</p>
+    </section>
+
+    <!-- STREAKS & BADGES -->
+    <section class="card streak-card" *ngIf="dashboard.streakStatus as streak">
+      <h3>🔥 {{ streak.currentStreak }}-day streak <span class="best-tag" *ngIf="streak.longestStreak > 0">(best: {{ streak.longestStreak }})</span></h3>
+      <p>{{ streak.streakMessage }}</p>
+      <div class="badges">
+        <div class="badge" *ngFor="let badge of streak.badges" [class.earned]="badge.earned" [title]="badge.description">
+          <span class="badge-emoji">{{ badge.emoji }}</span>
+          <span class="badge-name">{{ badge.name }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURE 2: TIME COST OF PURCHASES (monthly summary) -->
+    <section class="card time-cost-card" *ngIf="dashboard.timeCostSummaryMessage">
+      <h3>⏳ Time Cost</h3>
+      <p>{{ dashboard.timeCostSummaryMessage }}</p>
+    </section>
+    <section class="card time-cost-card" *ngIf="!dashboard.timeCostSummaryMessage">
+      <h3>⏳ Time Cost</h3>
+      <p>Add your salary and working hours in <a routerLink="/settings">Settings</a> to see what your
+        spending costs you in hours of work.</p>
+    </section>
+
+    <!-- FEATURE 1: SALARY AWARENESS & SPENDING PATTERNS -->
+    <section class="card" *ngIf="dashboard.salaryInsights && dashboard.salaryInsights.length > 0">
+      <h3>💰 Payday Patterns</h3>
+      <div class="insight" *ngFor="let insight of dashboard.salaryInsights">
+        <p>{{ insight }}</p>
+      </div>
+    </section>
+
+    <!-- 4. DREAM PROTECTOR (now supports multiple dreams) -->
+    <section class="card dream" *ngFor="let dream of dashboard.dreamStatuses">
+      <h3>✨ Dream Protector: {{ dream.dreamName }}</h3>
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="dream.progressPercent"></div>
+      </div>
+      <p class="progress-label">{{ dream.progressPercent | number:'1.0-1' }}% toward {{ dream.targetAmount | currency:dashboard.currency }}</p>
+      <p>{{ dream.message }}</p>
+    </section>
+
+    <section class="card dream" *ngIf="!dashboard.dreamStatuses || dashboard.dreamStatuses.length === 0">
+      <h3>✨ Dream Protector</h3>
+      <p>You haven't set a dream yet. Head to the "Dream" tab and tell us what you're saving for!</p>
+    </section>
+
+    <!-- 5. MEMORY LANE -->
+    <section class="card">
+      <h3>🕰️ Memory Lane</h3>
+      <div class="timeline">
+        <div class="timeline-entry" *ngFor="let entry of dashboard.memoryLane">
+          <div class="timeline-month">{{ entry.monthLabel }}</div>
+          <div class="timeline-message">{{ entry.message }}</div>
+        </div>
+      </div>
+    </section>
+
+  </ng-container>
+
+</div>

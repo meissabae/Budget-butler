@@ -1,0 +1,9 @@
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <h2 *ngIf="loading">Verifying...</h2>
+    <h2 *ngIf="!loading && success">✅ Email verified!</h2>
+    <h2 *ngIf="!loading && !success">⚠️ Verification failed</h2>
+    <p class="subtitle">{{ message }}</p>
+    <p class="switch"><a routerLink="/">Go to dashboard</a></p>
+  </div>
+</div>

@@ -1,0 +1,84 @@
+.subtitle {
+  color: var(--color-muted);
+  margin-top: -6px;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.form-row input {
+  flex: 1;
+  min-width: 160px;
+}
+
+.btn-primary {
+  background: var(--color-yellow);
+  color: var(--color-ink);
+  padding: 10px 20px;
+}
+
+.btn-delete {
+  background: #FDE8ED;
+  color: var(--color-coral);
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+.btn-edit {
+  background: #E8F0FE;
+  color: #1A56DB;
+  padding: 6px 12px;
+  font-size: 13px;
+  margin-right: 6px;
+}
+
+.btn-cancel {
+  background: #F2EFE7;
+  color: var(--color-muted);
+  padding: 10px 18px;
+}
+
+.actions {
+  white-space: nowrap;
+}
+
+.editing-row {
+  background: #FFFBEF;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+th, td {
+  text-align: left;
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+th {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.empty {
+  color: var(--color-muted);
+  margin-top: 12px;
+}

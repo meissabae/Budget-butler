@@ -1,0 +1,40 @@
+<h2>Categories</h2>
+<p class="subtitle">These are your budget "buckets" - e.g. Marketing, Restaurants, Transportation.</p>
+
+<section class="card form-card">
+  <h3>{{ editingId != null ? 'Edit category' : 'Add a new category' }}</h3>
+  <p class="empty" *ngIf="wallets.length === 0">
+    You need at least one wallet before adding a category. Go to the "Wallets" tab first!
+  </p>
+  <form (ngSubmit)="submit()" class="form-row" *ngIf="wallets.length > 0">
+    <input type="text" placeholder="Category name (e.g. Restaurants)" [(ngModel)]="form.name" name="name" required>
+    <input type="number" placeholder="Monthly limit ($)" [(ngModel)]="form.monthlyLimit" name="monthlyLimit" min="1" required>
+    <select [(ngModel)]="form.walletId" name="walletId" required>
+      <option [ngValue]="null" disabled>Wallet</option>
+      <option *ngFor="let wallet of wallets" [ngValue]="wallet.id">{{ wallet.name }}</option>
+    </select>
+    <button type="submit" class="btn-primary">{{ editingId != null ? 'Save changes' : 'Add' }}</button>
+    <button type="button" class="btn-cancel" *ngIf="editingId != null" (click)="cancelEdit()">Cancel</button>
+  </form>
+</section>
+
+<section class="card">
+  <h3>Your categories</h3>
+  <table *ngIf="categories.length > 0">
+    <thead>
+      <tr><th>Name</th><th>Monthly limit</th><th>Wallet</th><th></th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let category of categories" [class.editing-row]="category.id === editingId">
+        <td>{{ category.name }}</td>
+        <td>{{ category.monthlyLimit | currency:currency }}</td>
+        <td>{{ category.walletName }}</td>
+        <td class="actions">
+          <button class="btn-edit" (click)="startEdit(category)">Edit</button>
+          <button class="btn-delete" (click)="removeCategory(category.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p *ngIf="categories.length === 0" class="empty">No categories yet. Add your first one above!</p>
+</section>

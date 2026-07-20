@@ -1,0 +1,42 @@
+<h2>💰 Salary & Work Settings</h2>
+<p class="subtitle">
+  This powers two features: personalized spending-pattern insights around payday,
+  and translating every expense into "hours of work" it cost you. Nothing here is
+  shared - it's only used to compute your own insights.
+</p>
+
+<div *ngIf="loading" class="state-message">Loading...</div>
+
+<section class="card" *ngIf="!loading">
+  <form (ngSubmit)="save()">
+    <label>Monthly salary ($)</label>
+    <input type="number" [(ngModel)]="monthlySalary" name="monthlySalary" min="1" placeholder="e.g. 3000" required>
+
+    <label>Salary payment day (1-31)</label>
+    <input type="number" [(ngModel)]="salaryPaymentDay" name="salaryPaymentDay" min="1" max="31" placeholder="e.g. 28" required>
+
+    <label>Monthly working hours</label>
+    <input type="number" [(ngModel)]="monthlyWorkingHours" name="monthlyWorkingHours" min="1" placeholder="e.g. 160" required>
+
+    <label>Currency</label>
+    <select [(ngModel)]="currency" name="currency">
+      <option *ngFor="let c of currencies" [value]="c">{{ c }}</option>
+    </select>
+
+    <label>Salary wallet (optional - which wallet gets filled on payday)</label>
+    <select [(ngModel)]="salaryWalletId" name="salaryWalletId">
+      <option [ngValue]="null">None</option>
+      <option *ngFor="let w of wallets" [ngValue]="w.id">{{ w.name }}</option>
+    </select>
+    <p class="hint" *ngIf="wallets.length === 0">
+      You don't have any wallets yet - create one in the "Wallets" tab to enable automatic salary deposits.
+    </p>
+
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
+
+    <button type="submit" class="btn-primary" [disabled]="saving">
+      {{ saving ? 'Saving...' : 'Save settings' }}
+    </button>
+  </form>
+</section>

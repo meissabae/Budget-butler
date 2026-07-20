@@ -1,0 +1,48 @@
+<h2>🔁 Recurring Expenses</h2>
+<p class="subtitle">Rent, subscriptions, or any fixed monthly cost. Budget Butler logs these
+  automatically each month once the day arrives - no need to re-enter them.</p>
+
+<section class="card form-card">
+  <h3>{{ editingId != null ? 'Edit recurring expense' : 'Add a recurring expense' }}</h3>
+  <p class="empty" *ngIf="categories.length === 0">
+    You need at least one category first. Go to the "Categories" tab.
+  </p>
+  <form (ngSubmit)="submit()" class="form-row" *ngIf="categories.length > 0">
+    <input type="text" placeholder="Description (e.g. Netflix)" [(ngModel)]="form.description" name="description" required>
+    <input type="number" placeholder="Amount" [(ngModel)]="form.amount" name="amount" min="0.01" step="0.01" required>
+    <input type="number" placeholder="Day of month (1-31)" [(ngModel)]="form.dayOfMonth" name="dayOfMonth" min="1" max="31" required>
+    <select [(ngModel)]="form.categoryId" name="categoryId" required>
+      <option [ngValue]="0" disabled>Category</option>
+      <option *ngFor="let category of categories" [ngValue]="category.id">{{ category.name }}</option>
+    </select>
+    <button type="submit" class="btn-primary">{{ editingId != null ? 'Save changes' : 'Add' }}</button>
+    <button type="button" class="btn-cancel" *ngIf="editingId != null" (click)="cancelEdit()">Cancel</button>
+  </form>
+</section>
+
+<section class="card">
+  <h3>Your recurring expenses</h3>
+  <table *ngIf="rules.length > 0">
+    <thead>
+      <tr><th>Description</th><th>Amount</th><th>Day</th><th>Category</th><th>Active</th><th></th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let rule of rules" [class.editing-row]="rule.id === editingId">
+        <td>{{ rule.description }}</td>
+        <td>{{ rule.amount | currency:currency }}</td>
+        <td>Day {{ rule.dayOfMonth }}</td>
+        <td>{{ rule.categoryName }}</td>
+        <td>
+          <button class="toggle-btn" [class.on]="rule.active" (click)="toggleActive(rule)">
+            {{ rule.active ? 'Active' : 'Paused' }}
+          </button>
+        </td>
+        <td class="actions">
+          <button class="btn-edit" (click)="startEdit(rule)">Edit</button>
+          <button class="btn-delete" (click)="removeRule(rule.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p *ngIf="rules.length === 0" class="empty">No recurring expenses yet. Add rent or a subscription above!</p>
+</section>

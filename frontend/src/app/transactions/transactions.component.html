@@ -1,0 +1,81 @@
+<h2>Transactions</h2>
+<p class="subtitle">Log every expense here. This is what powers all the dashboard insights.</p>
+
+<section class="card form-card">
+  <h3>{{ editingId != null ? 'Edit expense' : 'Add an expense' }}</h3>
+  <p *ngIf="categories.length === 0" class="empty">
+    You need at least one category before adding a transaction.
+    Go to the "Categories" tab first!
+  </p>
+  <form (ngSubmit)="submit()" class="form-row" *ngIf="categories.length > 0">
+    <input type="text" placeholder="Description (e.g. Lunch with client)" [(ngModel)]="description" name="description" required>
+    <input type="number" placeholder="Amount ($)" [(ngModel)]="amount" name="amount" min="0.01" step="0.01" required>
+    <input type="date" [(ngModel)]="date" name="date" required>
+    <select [(ngModel)]="categoryId" name="categoryId" required>
+      <option [ngValue]="null" disabled>Category</option>
+      <option *ngFor="let category of categories" [ngValue]="category.id">{{ category.name }}</option>
+    </select>
+    <button type="submit" class="btn-primary">{{ editingId != null ? 'Save changes' : 'Add' }}</button>
+    <button type="button" class="btn-cancel" *ngIf="editingId != null" (click)="cancelEdit()">Cancel</button>
+  </form>
+</section>
+
+<section class="card">
+  <h3>📥 Import from a bank statement</h3>
+  <p class="hint">
+    Export a CSV statement from your bank (most banks offer this), then upload it here.
+    We look for Date/Description/Amount columns automatically - every imported row will be
+    assigned to the category you pick below (you can move individual ones later).
+  </p>
+  <div class="form-row" *ngIf="categories.length > 0">
+    <select [(ngModel)]="importCategoryId" name="importCategoryId">
+      <option [ngValue]="null" disabled>Category for imported rows</option>
+      <option *ngFor="let category of categories" [ngValue]="category.id">{{ category.name }}</option>
+    </select>
+    <input type="file" accept=".csv" (change)="onFileSelected($event)">
+    <button class="btn-primary" [disabled]="!selectedFile || !importCategoryId || importing" (click)="submitImport()">
+      {{ importing ? 'Importing...' : 'Import' }}
+    </button>
+  </div>
+
+  <div class="import-result" *ngIf="importResult">
+    <p class="import-summary">
+      ✅ Imported {{ importResult.imported }} transaction(s).
+      <span *ngIf="importResult.skipped > 0">⚠️ Skipped {{ importResult.skipped }} row(s) we couldn't understand.</span>
+    </p>
+    <ul class="import-errors" *ngIf="importResult.errors.length > 0">
+      <li *ngFor="let err of importResult.errors">{{ err }}</li>
+    </ul>
+  </div>
+</section>
+
+<section class="card">
+  <div class="section-header">
+    <h3>History <span class="count" *ngIf="totalElements > 0">({{ totalElements }})</span></h3>
+    <button class="btn-export" (click)="exportCsv()" [disabled]="exporting">
+      {{ exporting ? 'Exporting...' : '⬇ Export CSV' }}
+    </button>
+  </div>
+  <table *ngIf="transactions.length > 0">
+    <thead>
+      <tr><th>Date</th><th>Description</th><th>Category</th><th>Amount</th><th></th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let t of transactions" [class.editing-row]="t.id === editingId">
+        <td>{{ t.date }}</td>
+        <td>
+          {{ t.description }}
+          <div class="time-cost" *ngIf="t.timeCostMessage">⏳ {{ t.timeCostMessage }}</div>
+        </td>
+        <td>{{ t.categoryName }}</td>
+        <td>{{ t.amount | currency:currency }}</td>
+        <td class="actions">
+          <button class="btn-edit" (click)="startEdit(t)">Edit</button>
+          <button class="btn-delete" (click)="removeTransaction(t.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <button class="btn-load-more" *ngIf="hasMore" (click)="loadMore()">Load more</button>
+  <p *ngIf="transactions.length === 0" class="empty">No transactions logged yet.</p>
+</section>
