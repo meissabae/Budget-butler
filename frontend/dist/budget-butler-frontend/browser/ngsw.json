@@ -1,0 +1,73 @@
+{
+  "configVersion": 1,
+  "timestamp": 1784625738713,
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/index.html",
+        "/main-COHAUF6C.js",
+        "/manifest.webmanifest",
+        "/polyfills-FFHMD2TL.js",
+        "/styles-KQ5IGLT4.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/assets/icons/apple-touch-icon.png",
+        "/assets/icons/favicon-32.png",
+        "/assets/icons/icon-192-maskable.png",
+        "/assets/icons/icon-192.png",
+        "/assets/icons/icon-512-maskable.png",
+        "/assets/icons/icon-512.png"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/assets/icons/apple-touch-icon.png": "9fc7e41974fa6283f45e3bf2bc7c6e4cb485b319",
+    "/assets/icons/favicon-32.png": "262039730365915045974b00e3ba1fdb3360ef59",
+    "/assets/icons/icon-192-maskable.png": "47ff1cf3548d83b77c87f154e8a2a216a3229dad",
+    "/assets/icons/icon-192.png": "e8c00fafaf86df7f81b7d86d94039a7f4d970dc4",
+    "/assets/icons/icon-512-maskable.png": "9bb2a90c26ce29e9c7d0e64905dc609aae6e61c6",
+    "/assets/icons/icon-512.png": "d6ec30406e08dc0c82f756373f335e3e6f1bee29",
+    "/index.html": "e9954e8a93e298e34d44bbbbfe0cf0d8e7422cf4",
+    "/main-COHAUF6C.js": "3e812793d781b5f2d677eb395cda483c920994d4",
+    "/manifest.webmanifest": "65955b558da41b3e27f197c32cb3c604d94f2eb4",
+    "/polyfills-FFHMD2TL.js": "f49b49a155bc7d192db62a4c15d0a612b460a667",
+    "/styles-KQ5IGLT4.css": "eec0a456758730e7f5ea407dfa4048ce2f3309a7"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}
