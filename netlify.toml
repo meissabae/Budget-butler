@@ -1,6 +1,6 @@
 [build]
 base = "frontend"
-command = "npm install && ./node_modules/.bin/ng build"
+command = "npm install && npm run build"
 publish = "dist/budget-butler-frontend/browser"
 
 [build.environment]
